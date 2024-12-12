@@ -44,16 +44,28 @@ class DetailPage extends StatelessWidget {
               const Divider(color: Colors.white),
               const SizedBox(height: 8),
               Column(
-                children: data['links'].entries.map<Widget>((entry) {
+                children: List.generate(data['links'].length, (index) {
+                  var link =
+                      data['links'][index]; // Access each link in the list
                   return Row(
                     children: [
                       Expanded(
-                        child: Text("${entry.key}"),
+                        child: Text(link['name'] ??
+                            'No Name'), // Display the 'name' field (Instagram, Facebook)
                       ),
-                      Expanded(flex: 2, child: Text("${entry.value}")),
+                      const SizedBox(width: 8), // Space between name and URL
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          link['url'] ?? 'No URL', // Display the 'url' field
+                          style: const TextStyle(
+                              color: Colors
+                                  .blue), // Optional: Make the URL look like a hyperlink
+                        ),
+                      ),
                     ],
                   );
-                }).toList(),
+                }),
               ),
             ],
           ),

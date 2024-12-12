@@ -44,4 +44,43 @@ class ApiHelper {
       log("Error fetching API data: $e");
     }
   }
+
+  Future<bool> insertUser({
+    required String name,
+    required String desc,
+    required List<Map<String, String>> links,
+  }) async {
+    try {
+      Uri url =
+          Uri.parse("http://10.0.2.2/prinx-linktree-clone/api/v1/insert.php");
+      Map<String, dynamic> userData = {
+        "name": name,
+        "desc": desc,
+        "links": links,
+      };
+
+      http.Response response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(userData),
+      );
+
+      if (response.statusCode == 201) {
+        Map responseData = jsonDecode(response.body);
+        if (responseData['data'] == "User created successfully.") {
+          log("User inserted successfully.");
+          return true;
+        } else {
+          log("Failed to insert user: ${responseData['error']}");
+        }
+      } else {
+        log("API request failed with status ${response.statusCode}");
+      }
+    } catch (e) {
+      log("Error inserting user: $e");
+    }
+    return false;
+  }
 }
